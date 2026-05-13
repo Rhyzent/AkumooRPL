@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Akumoo Design System — warm Indonesian culinary palette
+   All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Surfaces */
+    --background: 39 40% 96%;          /* warm cream */
+    --foreground: 25 30% 14%;          /* deep cocoa */
+
+    --card: 36 50% 99%;
+    --card-foreground: 25 30% 14%;
+
+    --popover: 36 50% 99%;
+    --popover-foreground: 25 30% 14%;
+
+    /* Brand */
+    --primary: 0 78% 45%;              /* akuumo red */
+    --primary-foreground: 39 60% 97%;
+    --primary-glow: 0 80% 55%;
+
+    --secondary: 32 35% 90%;           /* sand */
+    --secondary-foreground: 25 30% 14%;
+
+    --muted: 35 25% 92%;
+    --muted-foreground: 25 12% 38%;
+
+    --accent: 142 38% 28%;             /* daun pisang deep green */
+    --accent-foreground: 39 60% 97%;
+
+    --destructive: 0 75% 48%;
+    --destructive-foreground: 39 60% 97%;
+
+    --border: 30 20% 86%;
+    --input: 30 20% 86%;
+    --ring: 0 78% 45%;
+
+    --radius: 1rem;
+
+    /* Gradients */
+    --gradient-warm: linear-gradient(135deg, hsl(0 78% 45%) 0%, hsl(0 80% 55%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(39 40% 96%) 0%, hsl(32 35% 90%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 8px 30px -12px hsl(25 30% 14% / 0.18);
+    --shadow-card: 0 4px 16px -8px hsl(25 30% 14% / 0.12);
+    --shadow-glow: 0 12px 40px -12px hsl(0 78% 45% / 0.45);
+
+    /* Motion */
+    --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 25 30% 8%;
+    --foreground: 39 40% 96%;
+    --card: 25 25% 12%;
+    --card-foreground: 39 40% 96%;
+    --popover: 25 25% 12%;
+    --popover-foreground: 39 40% 96%;
+    --primary: 0 80% 55%;
+    --primary-foreground: 25 30% 8%;
+    --secondary: 25 20% 18%;
+    --secondary-foreground: 39 40% 96%;
+    --muted: 25 20% 18%;
+    --muted-foreground: 35 15% 65%;
+    --accent: 142 38% 38%;
+    --accent-foreground: 39 40% 96%;
+    --destructive: 0 75% 48%;
+    --destructive-foreground: 39 40% 96%;
+    --border: 25 20% 22%;
+    --input: 25 20% 22%;
+    --ring: 0 80% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.02em;
+  }
+}
