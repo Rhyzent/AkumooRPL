@@ -50,8 +50,15 @@ const MenuAdmin = () => {
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Auto-assign sort_order untuk item baru bila masih 0
+    let sort_order = form.sort_order;
+    if (!editId && (!sort_order || sort_order === 0)) {
+      const maxOrder = items.reduce((m, i) => Math.max(m, i.sort_order ?? 0), 0);
+      sort_order = maxOrder + 1;
+    }
     const payload = {
       ...form,
+      sort_order,
       slug: form.slug || form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
       category_id: form.category_id || null,
       image_url: form.image_url || null,

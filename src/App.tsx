@@ -17,7 +17,6 @@ import Dashboard from "./pages/admin/Dashboard.tsx";
 import Orders from "./pages/admin/Orders.tsx";
 import MenuAdmin from "./pages/admin/MenuAdmin.tsx";
 import Categories from "./pages/admin/Categories.tsx";
-import Promos from "./pages/admin/Promos.tsx";
 import Admins from "./pages/admin/Admins.tsx";
 
 const queryClient = new QueryClient();
@@ -43,7 +42,6 @@ const App = () => (
               <Route path="orders" element={<Orders />} />
               <Route path="menu" element={<MenuAdmin />} />
               <Route path="categories" element={<Categories />} />
-              <Route path="promos" element={<Promos />} />
               <Route path="admins" element={<Admins />} />
             </Route>
             <Route path="*" element={<NotFound />} />

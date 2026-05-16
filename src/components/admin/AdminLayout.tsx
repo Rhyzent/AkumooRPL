@@ -1,5 +1,5 @@
 import { NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
-import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Tag, Megaphone, Shield, LogOut } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Tag, Shield, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useOrderNotifications } from "@/hooks/useOrderNotifications";
 import { Logo } from "@/components/Logo";
@@ -11,7 +11,6 @@ const links = [
   { to: "/admin/orders", label: "Pesanan", icon: ShoppingBag },
   { to: "/admin/menu", label: "Menu", icon: UtensilsCrossed },
   { to: "/admin/categories", label: "Kategori", icon: Tag },
-  { to: "/admin/promos", label: "Promo", icon: Megaphone },
   { to: "/admin/admins", label: "Admin", icon: Shield },
 ];
 
