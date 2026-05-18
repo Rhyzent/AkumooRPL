@@ -1,6 +1,7 @@
 import { Logo } from "./Logo";
-import { Instagram, MessageCircle, MapPin, Clock, Phone } from "lucide-react";
+import { Instagram, MessageCircle, MapPin, Clock, Phone, Bike } from "lucide-react";
 import { Link } from "react-router-dom";
+import { DELIVERY_LINKS } from "@/data/links";
 
 export const Footer = () => (
   <footer className="border-t border-border/60 bg-secondary/40">
@@ -11,6 +12,11 @@ export const Footer = () => (
           Akumoo Bowl &amp; Grill — bento ala rumahan dengan cita rasa Jepang yang lembut & nyaman.
           Disajikan fresh setiap hari di Bogor Barat.
         </p>
+        <div className="flex flex-wrap gap-2">
+          <a href={DELIVERY_LINKS.gofood} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#ed1c24] px-4 py-2 text-xs font-bold text-white shadow-card transition-transform hover:-translate-y-0.5">
+            <Bike className="h-4 w-4" /> GoFood
+          </a>
+        </div>
         <div className="flex gap-3">
           <a href="https://www.instagram.com/akumoo.id" target="_blank" rel="noreferrer" aria-label="Instagram" className="grid h-10 w-10 place-items-center rounded-full border border-border bg-background transition-colors hover:bg-foreground hover:text-background">
             <Instagram className="h-4 w-4" />

@@ -15,10 +15,11 @@ import { ImageUpload } from "@/components/admin/ImageUpload";
 interface Cat { id: string; name: string; }
 interface Item {
   id: string; name: string; slug: string; description: string | null; price: number;
+  discount_price: number | null;
   image_url: string | null; category_id: string | null; badge: string | null; is_active: boolean; sort_order: number;
 }
 
-const empty = { name: "", slug: "", description: "", price: 0, image_url: "", category_id: "", badge: "", is_active: true, sort_order: 0 };
+const empty = { name: "", slug: "", description: "", price: 0, discount_price: 0, image_url: "", category_id: "", badge: "", is_active: true, sort_order: 0 };
 
 const MenuAdmin = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -42,6 +43,7 @@ const MenuAdmin = () => {
     setEditId(i.id);
     setForm({
       name: i.name, slug: i.slug, description: i.description ?? "", price: Number(i.price),
+      discount_price: i.discount_price != null ? Number(i.discount_price) : 0,
       image_url: i.image_url ?? "", category_id: i.category_id ?? "", badge: i.badge ?? "",
       is_active: i.is_active, sort_order: i.sort_order,
     });
@@ -64,6 +66,7 @@ const MenuAdmin = () => {
       image_url: form.image_url || null,
       badge: form.badge || null,
       description: form.description || null,
+      discount_price: form.discount_price && form.discount_price > 0 ? form.discount_price : null,
     };
     const { error } = editId
       ? await supabase.from("menu_items").update(payload).eq("id", editId)
@@ -94,6 +97,7 @@ const MenuAdmin = () => {
               <Field label="Nama"><Input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} /></Field>
               <Field label="Slug (kosongkan untuk auto)"><Input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} /></Field>
               <Field label="Harga (Rp)"><Input type="number" required min={0} value={form.price} onChange={e => setForm({ ...form, price: Number(e.target.value) })} /></Field>
+              <Field label="Harga Diskon (Rp) — kosongkan/0 jika tidak ada diskon"><Input type="number" min={0} value={form.discount_price} onChange={e => setForm({ ...form, discount_price: Number(e.target.value) })} placeholder="0" /></Field>
               <Field label="Kategori">
                 <Select value={form.category_id} onValueChange={(v) => setForm({ ...form, category_id: v })}>
                   <SelectTrigger><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
@@ -124,7 +128,16 @@ const MenuAdmin = () => {
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="font-semibold">{i.name}</div>
-                  <div className="text-xs text-muted-foreground">{formatRp(Number(i.price))} {!i.is_active && "· nonaktif"}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {i.discount_price && Number(i.discount_price) > 0 ? (
+                      <>
+                        <span className="line-through">{formatRp(Number(i.price))}</span>{" "}
+                        <span className="font-semibold text-destructive">{formatRp(Number(i.discount_price))}</span>
+                      </>
+                    ) : (
+                      formatRp(Number(i.price))
+                    )} {!i.is_active && "· nonaktif"}
+                  </div>
                 </div>
                 <div className="flex gap-1">
                   <Button size="icon" variant="ghost" onClick={() => startEdit(i)}><Pencil className="h-4 w-4" /></Button>

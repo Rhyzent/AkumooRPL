@@ -17,7 +17,11 @@ export const useShopData = () => {
     (async () => {
       const [{ data: cats }, { data: menus }] = await Promise.all([
         supabase.from("categories").select("id,name,sort_order").order("sort_order"),
-        supabase.from("menu_items").select("id,name,description,price,image_url,badge,category_id,is_active,slug").eq("is_active", true),
+        supabase
+          .from("menu_items")
+          .select("id,name,description,price,discount_price,image_url,badge,category_id,is_active,slug,sort_order")
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true }),
       ]);
       if (!alive) return;
 
@@ -31,17 +35,14 @@ export const useShopData = () => {
         name: m.name,
         description: m.description ?? "",
         price: Number(m.price),
+        discountPrice: m.discount_price != null ? Number(m.discount_price) : null,
         image: m.image_url || "/placeholder.svg",
         category: (catMap.get(m.category_id) as any) || "Lainnya",
         badge: m.badge ?? undefined,
       }));
 
-      // Merge: prefer DB items; append static items whose name not in DB
-      const dbNames = new Set(dbItems.map((i) => i.name.toLowerCase()));
-      const merged = [
-        ...dbItems,
-        ...staticMenu.filter((s) => !dbNames.has(s.name.toLowerCase())),
-      ];
+      // Use DB items as source of truth. Fallback to static only if DB is empty.
+      const merged = dbItems.length > 0 ? dbItems : staticMenu;
 
       // Categories: union of static + db, preserving order
       const staticCats = ["Bento", "Geprek", "Sarapan", "Cemilan"];

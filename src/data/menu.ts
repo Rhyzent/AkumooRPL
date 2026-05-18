@@ -21,6 +21,7 @@ export interface MenuItem {
   name: string;
   description: string;
   price: number;
+  discountPrice?: number | null;
   image: string;
   category: MenuCategory;
   badge?: string;
