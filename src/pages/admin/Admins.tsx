@@ -29,10 +29,20 @@ const Admins = () => {
     try {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
+      
+      if (!token) {
+        throw new Error("Sesi tidak valid. Silakan login kembali.");
+      }
+
       const res = await fetch(`${VITE_SUPABASE_URL}/functions/v1/list-admins`, {
         method: "GET",
         headers: { authorization: `Bearer ${token}` },
       });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setAdmins(data.admins || []);
@@ -54,6 +64,11 @@ const Admins = () => {
     try {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
+
+      if (!token) {
+        throw new Error("Sesi tidak valid. Silakan login kembali.");
+      }
+
       const res = await fetch(`${VITE_SUPABASE_URL}/functions/v1/create-admin`, {
         method: "POST",
         headers: {
@@ -62,6 +77,11 @@ const Admins = () => {
         },
         body: JSON.stringify({ email, password }),
       });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       toast.success("Admin baru berhasil ditambahkan");
