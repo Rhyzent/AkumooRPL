@@ -14,8 +14,6 @@ interface AdminItem {
   created_at: string;
 }
 
-const VITE_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-
 const Admins = () => {
   const [admins, setAdmins] = useState<AdminItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,19 +32,43 @@ const Admins = () => {
         throw new Error("Sesi tidak valid. Silakan login kembali.");
       }
 
-      const res = await fetch(`${VITE_SUPABASE_URL}/functions/v1/list-admins`, {
-        method: "GET",
-        headers: { authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      if (!supabaseUrl) {
+        throw new Error("Konfigurasi Supabase URL tidak ditemukan.");
       }
 
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      setAdmins(data.admins || []);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      try {
+        const res = await fetch(`${supabaseUrl}/functions/v1/list-admins`, {
+          method: "GET",
+          headers: { 
+            authorization: `Bearer ${token}`,
+            "content-type": "application/json",
+          },
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        setAdmins(data.admins || []);
+      } catch (fetchErr: any) {
+        clearTimeout(timeoutId);
+        if (fetchErr.name === 'AbortError') {
+          throw new Error("Permintaan timeout. Server tidak merespons.");
+        }
+        throw fetchErr;
+      }
     } catch (err: any) {
+      console.error("Fetch admins error:", err);
       toast.error(err.message || "Gagal memuat daftar admin");
     } finally {
       setLoading(false);
@@ -69,27 +91,48 @@ const Admins = () => {
         throw new Error("Sesi tidak valid. Silakan login kembali.");
       }
 
-      const res = await fetch(`${VITE_SUPABASE_URL}/functions/v1/create-admin`, {
-        method: "POST",
-        headers: {
-          authorization: `Bearer ${token}`,
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      if (!supabaseUrl) {
+        throw new Error("Konfigurasi Supabase URL tidak ditemukan.");
       }
 
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      toast.success("Admin baru berhasil ditambahkan");
-      setEmail("");
-      setPassword("");
-      setShowForm(false);
-      fetchAdmins();
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+      try {
+        const res = await fetch(`${supabaseUrl}/functions/v1/create-admin`, {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${token}`,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        toast.success("Admin baru berhasil ditambahkan");
+        setEmail("");
+        setPassword("");
+        setShowForm(false);
+        fetchAdmins();
+      } catch (fetchErr: any) {
+        clearTimeout(timeoutId);
+        if (fetchErr.name === 'AbortError') {
+          throw new Error("Permintaan timeout. Server tidak merespons.");
+        }
+        throw fetchErr;
+      }
     } catch (err: any) {
+      console.error("Add admin error:", err);
       toast.error(err.message || "Gagal menambahkan admin");
     } finally {
       setAdding(false);
