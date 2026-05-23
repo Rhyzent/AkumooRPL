@@ -53,19 +53,10 @@ const Login = () => {
       setPassword("");
       setConfirmPassword("");
     } else {
-      // Untuk login, tunggu hingga auth state ter-update
-      // useEffect di atas akan handle redirect otomatis
-      // Tambah delay kecil untuk memastikan Supabase state ter-update
-      const checkAuthState = () => {
-        if (user && isAdmin) {
-          setBusy(false);
-          toast.success("Berhasil masuk");
-          // Redirect akan ditangani oleh useEffect
-        } else {
-          setTimeout(checkAuthState, 100);
-        }
-      };
-      setTimeout(checkAuthState, 100);
+      // Untuk login, biarkan useEffect handle redirect
+      // Hanya set success toast, redirect akan otomatis
+      toast.success("Berhasil masuk");
+      // Jangan set setBusy(false) di sini, biarkan terus loading hingga redirect
     }
   };
 
