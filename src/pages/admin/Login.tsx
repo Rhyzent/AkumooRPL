@@ -39,14 +39,33 @@ const Login = () => {
     setBusy(true);
     const fn = mode === "login" ? signIn : signUp;
     const { error } = await fn(email, password);
-    setBusy(false);
-    if (error) return toast.error(error);
+    
+    if (error) {
+      setBusy(false);
+      return toast.error(error);
+    }
+    
     if (mode === "signup") {
+      setBusy(false);
       toast.success("Akun admin pertama dibuat. Silakan login.");
       setMode("login");
       setAdminExists(true);
+      setPassword("");
+      setConfirmPassword("");
     } else {
-      toast.success("Berhasil masuk");
+      // Untuk login, tunggu hingga auth state ter-update
+      // useEffect di atas akan handle redirect otomatis
+      // Tambah delay kecil untuk memastikan Supabase state ter-update
+      const checkAuthState = () => {
+        if (user && isAdmin) {
+          setBusy(false);
+          toast.success("Berhasil masuk");
+          // Redirect akan ditangani oleh useEffect
+        } else {
+          setTimeout(checkAuthState, 100);
+        }
+      };
+      setTimeout(checkAuthState, 100);
     }
   };
 
