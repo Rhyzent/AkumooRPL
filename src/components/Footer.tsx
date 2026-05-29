@@ -16,6 +16,9 @@ export const Footer = () => (
           <a href={DELIVERY_LINKS.gofood} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#ed1c24] px-4 py-2 text-xs font-bold text-white shadow-card transition-transform hover:-translate-y-0.5">
             <Bike className="h-4 w-4" /> GoFood
           </a>
+          <a href={DELIVERY_LINKS.grab} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#00B14F] px-4 py-2 text-xs font-bold text-white shadow-card transition-transform hover:-translate-y-0.5">
+            <Bike className="h-4 w-4" /> Grab
+          </a>
         </div>
         <div className="flex gap-3">
           <a href="https://www.instagram.com/akumoo.id" target="_blank" rel="noreferrer" aria-label="Instagram" className="grid h-10 w-10 place-items-center rounded-full border border-border bg-background transition-colors hover:bg-foreground hover:text-background">
