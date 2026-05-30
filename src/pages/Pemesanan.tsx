@@ -153,7 +153,21 @@ const Pemesanan = () => {
                             >
                               <Minus className="h-4 w-4" />
                             </button>
-                            <span className="w-8 text-center text-sm font-semibold">{qty}</span>
+                            <input
+                            type="number"
+                            min={1}
+                            value={qty}
+                            onWheel={(e) => e.currentTarget.blur()}
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value);
+                              if (!isNaN(val) && val > 0) {
+                                setCart((c) => ({ ...c, [m.id]: val }));
+                              } else if (e.target.value === "") {
+                                setCart((c) => ({ ...c, [m.id]: 1 }));
+                              }
+                            }}
+                            className="w-10 bg-transparent text-center text-sm font-semibold text-background outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            />
                             <button
                               type="button"
                               onClick={() => inc(m.id)}
