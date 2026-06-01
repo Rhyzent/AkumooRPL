@@ -19,7 +19,6 @@ erDiagram
         uuid user_id FK "references auth.users"
         app_role role "admin|user"
         timestamptz created_at
-        unique "user_id, role"
     }
 
     CATEGORIES {
@@ -94,6 +93,7 @@ erDiagram
 - Manage admin & user roles
 - RLS policies untuk kontrol akses
 - Fungsi: `has_role()`, `admin_exists()`
+- Unique constraint: `(user_id, role)`
 
 ### 🍽️ Menu Management
 **categories**
@@ -136,6 +136,12 @@ payment_method: "transfer" | "cod"
 CREATE INDEX idx_menu_category ON menu_items(category_id);
 CREATE INDEX idx_order_items_order ON order_items(order_id);
 CREATE INDEX idx_orders_status ON orders(status);
+```
+
+## SQL Constraints
+
+```sql
+ALTER TABLE user_roles ADD CONSTRAINT unique_user_role UNIQUE(user_id, role);
 ```
 
 ## Security (Row Level Security)
