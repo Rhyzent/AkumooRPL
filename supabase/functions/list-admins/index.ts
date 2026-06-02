@@ -23,15 +23,20 @@ Deno.serve(async (req) => {
     const token = (req.headers.get("authorization") || "").replace("Bearer ", "");
     if (!token) throw new Error("Unauthorized");
 
-    const { data: { user } } = await supabaseAdmin.auth.getUser(token);
-    if (!user) throw new Error("Unauthorized");
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    console.log("Auth check - User ID:", user?.id, "Error:", authError);
+    if (authError || !user) throw new Error("Unauthorized");
 
-    const { data: roleCheck } = await supabaseAdmin
+    const { data: roleCheck, error: roleError } = await supabaseAdmin
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id)
       .eq("role", "admin")
       .maybeSingle();
+    
+    console.log("Role check - Data:", roleCheck, "Error:", roleError);
+    
+    if (roleError) throw new Error(`Database error: ${roleError.message}`);
     if (!roleCheck) throw new Error("Forbidden: admin only");
 
     const { data: roles } = await supabaseAdmin
