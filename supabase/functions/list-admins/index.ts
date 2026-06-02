@@ -2,12 +2,18 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Max-Age": "86400",
 };
 
 Deno.serve(async (req) => {
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", { 
+      status: 200,
+      headers: corsHeaders 
+    });
   }
 
   try {
@@ -56,12 +62,19 @@ Deno.serve(async (req) => {
 
     return new Response(
       JSON.stringify({ admins }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { 
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" } 
+      }
     );
   } catch (err: any) {
+    console.error("Error in list-admins:", err);
     return new Response(
       JSON.stringify({ error: err.message }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { 
+        status: 400, 
+        headers: { ...corsHeaders, "Content-Type": "application/json" } 
+      }
     );
   }
 });
